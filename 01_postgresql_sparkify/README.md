@@ -28,5 +28,5 @@ Columns  - `artist_id`, `name`, `location`, `latitude`, `longitude`
 Columns  - `start_time`, `hour`, `day`, `week`, `month`, `year`, `weekday`
 
 ### ER Diagram
-<iframe width="560" height="315" src='https://dbdiagram.io/embed/6055d53decb54e10c33c61c9'> </iframe>
+![alt text](https://github.com/Pathairush/data_engineering/blob/master/01_postgresql_sparkify/Sparkify.png)
  
