@@ -1,0 +1,57 @@
+//// -- LEVEL 1
+//// -- Tables and References
+
+// Creating tables
+Table songplays {
+    songplay_id serial [pk]
+    start_time bigint
+    user_id int
+    level varchar
+    song_id varchar
+    artist_id varchar
+    session_id int
+    location varchar
+    user_agent varchar
+}
+
+Table users {
+    user_id int [pk]
+    first_name varchar
+    last_name varchar
+    gender varchar
+    level varchar
+}
+
+Table songs {
+  song_id varchar [pk]
+    title varchar
+    artist_id varchar
+    year int
+    duration numeric
+ }
+ 
+ Table artists {
+    artist_id varchar [pk]
+    name varchar
+    location varchar
+    latitude numeric
+    longitude numeric
+ }
+ 
+ Table time {
+    start_time timestamp [pk]
+    hour int
+    day int
+    week int
+    month int
+    year int
+    weekday varchar
+ }
+
+// Creating references
+// You can also define relaionship separately
+// > many-to-one; < one-to-many; - one-to-one
+Ref: songplays.user_id > users.user_id
+Ref: songplays.song_id > songs.song_id
+Ref: songplays.artist_id > artists.artist_id
+Ref: songplays.start_time > time.start_time
