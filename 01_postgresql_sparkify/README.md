@@ -14,17 +14,17 @@ The provided database consists of 1 fact table and 4 dimension tables as followi
 Schema design concept - **STAR Schema**
 
 ### Fact Table
-**songplays** - records in log data associated with song plays i.e. records with page NextSong
+- **songplays** - records in log data associated with song plays i.e. records with page NextSong <br>
 Columns  - `songplay_id`, `start_time`, `user_id`, `level, song_id`, `artist_id`, `session_id`, `location`, `user_agent`
 
 ### Dimension Tables
-**users** - users in the app
+- **users** - users in the app <br>
 Columns  - `user_id`, `first_name`, `last_name`, `gender`, `level`
-**songs** - songs in music database
+- **songs** - songs in music database <br>
 Columns  - `song_id`, `title`, `artist_id`, `year`, `duration`
-**artists** - artists in music database
+- **artists** - artists in music database <br>
 Columns  - `artist_id`, `name`, `location`, `latitude`, `longitude`
-**time** - timestamps of records in songplays broken down into specific units
+- **time** - timestamps of records in songplays broken down into specific units <br>
 Columns  - `start_time`, `hour`, `day`, `week`, `month`, `year`, `weekday`
 
 ### ER Diagram
