@@ -6,6 +6,12 @@ from sql_queries import *
 
 
 def process_song_file(cur, filepath):
+    """
+    This function inserts data from `data/song_data` to `songs` and `artist` tables
+    @args
+    cur : the postgre sql cursor connceted to the `Sparkify` database.
+    filepath : the provided json file path for song data.
+    """
     # open song file
     df = pd.read_json(filepath, lines=True)
 
@@ -14,11 +20,17 @@ def process_song_file(cur, filepath):
     cur.execute(song_table_insert, song_data)
     
     # insert artist record
-    artist_data = df[['artist_id','artist_name','artist_location', 'artist_latitude', 'artist_longitude']].drop_duplicates().values[0].tolist()
+    artist_data = df.loc[:,['artist_id','artist_name','artist_location', 'artist_latitude', 'artist_longitude']].drop_duplicates().values[0].tolist()
     cur.execute(artist_table_insert, artist_data)
 
 
 def process_log_file(cur, filepath):
+    """
+    This function inserts data from `data/log_data` to the following tables `time`, `user`, and `songplays`
+    @args
+    cur : the postgre sql cursor connceted to the `Sparkify` database.
+    filepath : the provided json file path for log data.
+    """
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -61,6 +73,14 @@ def process_log_file(cur, filepath):
 
 
 def process_data(cur, conn, filepath, func):
+    """
+    Generic function to process the data based on the provided func argument
+    @args
+    cur : the postgre sql cursor connceted to the `Sparkify` database.
+    conn : the postfre sql connection object to make a database commit. 
+    filepath : the provided json file path.
+    func : provided funcs for processing data it could be any func in the following list [process_log_file, process_song_file].
+    """
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -80,6 +100,13 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
+    """
+    To run the Sparkify ETL pipeline
+    - connect to Sparkify database
+    - process the song data
+    - process the log data
+    - close connection
+    """
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
 
