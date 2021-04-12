@@ -77,12 +77,12 @@ Delta Lake  is an  [open source storage layer](https://github.com/delta-io/delta
 In short, delta lake is an unpdated version of parquet format. The development team brings many useful features to fix the problem of storaing data in NoSQL format. For example, I decided to use the delta lake format in this project becasue it provides the `UPSERT` ability compared to parquet that you have to code it by yourself. It helps heavy-lifting unnecessary thing and help you focusing on only the data. Also there are other useful features such as ACID transaction and metadata handling.
 
 #### [Apache Spark](https://spark.apache.org/docs/2.4.3/)  `computation engine`
-![img](https://github.com/Pathairush/data_engineering/blob/master/06_capstone_project/image/Apache_Spark_logo.svg.png)
+![img](https://github.com/Pathairush/data_engineering/blob/master/06_capstone_project/image/spark_logo.png)
 
 Apache Spark is a fast and general-purpose cluster computing system. It provides high-level APIs in Java, Scala, Python and R, and an optimized engine that supports general execution graphs. It also supports a rich set of higher-level tools including [Spark SQL](https://spark.apache.org/docs/2.4.3/sql-programming-guide.html) for SQL and structured data processing, [MLlib](https://spark.apache.org/docs/2.4.3/ml-guide.html) for machine learning, [GraphX](https://spark.apache.org/docs/2.4.3/graphx-programming-guide.html) for graph processing, and [Spark Streaming](https://spark.apache.org/docs/2.4.3/streaming-programming-guide.html).
 
 #### [Apache Airflow](https://airflow.apache.org/docs/apache-airflow/stable/)  `orchestrator`
-![img](https://github.com/Pathairush/data_engineering/blob/master/06_capstone_project/image/AirflowLogo.png)
+![img](https://github.com/Pathairush/data_engineering/blob/master/06_capstone_project/image/airflow_logo.png)
 
 Airflow is a platform to programmatically author, schedule and monitor workflows.
 
