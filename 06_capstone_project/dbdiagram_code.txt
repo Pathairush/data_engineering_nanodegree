@@ -1,0 +1,75 @@
+//// -- LEVEL 1
+//// -- Tables and References
+
+// Creating tables
+Table facts as F {
+  id string [primary key, not null]
+  cicid int [not null]
+  year int
+  month int
+  arrived_date date
+  departured_date date
+  airline string
+  flight_no string
+  visa_type string
+  immigration_port string
+  transportation string
+  visa_code string
+  state_code string
+  load_data_timestamp timestamp
+}
+
+Table dim_user as U {
+  cicid int [primary key, not null]
+  birth_year int
+  gender string
+  born_country string
+  residence_country string
+  load_data_timestamp timestamp
+ }
+ 
+ Table dim_state as S {
+   state_code string [primary key, not null]
+   state string
+   median_age double
+   male_population double
+   female_population double
+   total_population double
+   number_of_vaterans double
+   foreign_born double
+   median_household_size double
+   american_indian_alaska_native double
+   asian double
+   black_african_american double
+   hispanic_latino double
+   white double
+   load_data_timestamp timestamp
+ }
+ 
+ Table dim_country as C {
+   country string [primary key, not null]
+   avg_temp double
+   latitude string
+   longitude string
+   load_data_timestamp timestamp
+ }
+ 
+ Table dim_date as T {
+   date date [primary key, not null]
+   year int
+   month int
+   day int
+   week_of_year int
+   day_of_week int
+   load_data_timestamp timestamp
+ }
+
+// Creating references
+// You can also define relaionship separately
+// > many-to-one; < one-to-many; - one-to-one
+Ref: F.cicid - U.cicid  
+Ref: F.state_code > S.state_code
+Ref: U.born_country > C.country
+Ref: U.residence_country > C.country
+Ref: F.arrived_date > T.date
+Ref: F.departured_date > T.date
