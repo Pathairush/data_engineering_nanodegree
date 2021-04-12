@@ -19,7 +19,7 @@ Those answers can help US immigration department to design a better policy to ta
 
 1. `I94 immigration` - Dataset contains information about the Arrival-Departure Record Card, is a form used by U.S. Customs and Border Protection (CBP) intended to keep track of the arrival and departure to/from the United States of people who are not United States citizens or lawful permanent residents. The data in this project is only from year 2016 [more detail](https://travel.trade.gov/research/reports/i94/historical/2016.html)
 2. `World Temperature` - Dataset contains the global land temperature by city starting from year 1750 till 2015. [more detail](https://www.kaggle.com/berkeleyearth/climate-change-earth-surface-temperature-data)
-3. `US City demographic` - Dataset contains information about the demographics of all US cities and census-designated places with a population greater or equal to 65,00. Data comes from the US Census Bureau's 2015 American Community Survey. [more detail](https://public.opendatasoft.com/explore/dataset/us-cities-demographics/information/)
+3. `US City demographic` - Dataset contains information about the demographics of all US cities and census-designated places with a population greater or equal to 65,000. Data comes from the US Census Bureau's 2015 American Community Survey. [more detail](https://public.opendatasoft.com/explore/dataset/us-cities-demographics/information/)
 
 ## Foundings 
 
@@ -70,14 +70,19 @@ For more detail about the ETL script, you can see the code in `etl` folder.
 In any data pipeline, there will be 3 main components that we need to selectively choose for building the whole project. `storage format`, `computation engine`, and `orchestrator`. There are a lot of tools and technology out there, but here are what I decided to use in this capstone project.
 
 #### [Delta Lake](https://delta.io/) `storage format`
+![img](https://github.com/Pathairush/data_engineering/blob/master/06_capstone_project/image/delta-lake-logo.png)
+
 Delta Lake  is an  [open source storage layer](https://github.com/delta-io/delta)  that brings reliability to  [data lakes](https://databricks.com/discover/data-lakes/introduction). Delta Lake provides ACID transactions, scalable metadata handling, and unifies streaming and batch data processing. Delta Lake runs on top of your existing data lake and is fully compatible with Apache Spark APIs.
 
 In short, delta lake is an unpdated version of parquet format. The development team brings many useful features to fix the problem of storaing data in NoSQL format. For example, I decided to use the delta lake format in this project becasue it provides the `UPSERT` ability compared to parquet that you have to code it by yourself. It helps heavy-lifting unnecessary thing and help you focusing on only the data. Also there are other useful features such as ACID transaction and metadata handling.
 
 #### [Apache Spark](https://spark.apache.org/docs/2.4.3/)  `computation engine`
+![img](https://github.com/Pathairush/data_engineering/blob/master/06_capstone_project/image/Apache_Spark_logo.svg.png)
+
 Apache Spark is a fast and general-purpose cluster computing system. It provides high-level APIs in Java, Scala, Python and R, and an optimized engine that supports general execution graphs. It also supports a rich set of higher-level tools including [Spark SQL](https://spark.apache.org/docs/2.4.3/sql-programming-guide.html) for SQL and structured data processing, [MLlib](https://spark.apache.org/docs/2.4.3/ml-guide.html) for machine learning, [GraphX](https://spark.apache.org/docs/2.4.3/graphx-programming-guide.html) for graph processing, and [Spark Streaming](https://spark.apache.org/docs/2.4.3/streaming-programming-guide.html).
 
 #### [Apache Airflow](https://airflow.apache.org/docs/apache-airflow/stable/)  `orchestrator`
+![img](https://github.com/Pathairush/data_engineering/blob/master/06_capstone_project/image/AirflowLogo.png)
 
 Airflow is a platform to programmatically author, schedule and monitor workflows.
 
