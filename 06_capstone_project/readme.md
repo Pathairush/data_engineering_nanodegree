@@ -47,19 +47,89 @@ From the previous section's findings, here is the data model that we decide to a
 
 ## Data pipeline
 
-
-
-
 ###  Create a data model
 
-PUT AIRFLOW DIAGRAM HERE
-
 In each airflow task, we provide a `python`  script to ingest, transform and load data into delta format.
-For more detail about the ETL script, you can see the code in the `etl` folder.
+For more detail about the ETL script, you can see the code in the `etl` folder. You can find the running ETL step in `capstone_project.ipynb` file.
 
 ### Data quality check
 
 ### Data dictionary
+
+## Fact table
+
+| Column name         | Description                                       |
+|---------------------|---------------------------------------------------|
+| id                  | The unique id of I94 form transaction.            |
+| cicid               | Id of I94 form                                    |
+| year                | Form submitted year                               |
+| month               | Form submitted month                              |
+| arrived_date        | Arrived date in USA                               |
+| departured_date     | Departure date from USA                           |
+| airline             | Airline used to arrive in US                      |
+| flight_no           | Flight number                                     |
+| visa_type           | VISA type                                         |
+| immigration_port    | Port number                                       |
+| transportation      | Transportation way (Air, Sea, Land, Not reported) |
+| visa_code           | VISA code (Business, Pleasure, Student)           |
+| state_code          | Arrival state                                     |
+| load_data_timestamp | Timestamp when loaded the data                    |
+
+## dim_user
+
+| Column name         | Description                    |
+|---------------------|--------------------------------|
+| cicid               | Id of I94 form                 |
+| year                | Form submitted year            |
+| month               | Form submitted month           |
+| birth_year          | Respondent's birth year        |
+| gender              | Respondent's gender            |
+| born_country        | Respondent's born country      |
+| residence_country   | Respondent's residence country |
+| load_data_timestamp | Timestamp when loaded the data |
+
+## dim_state
+
+| Column name                   | Description                                              |
+|-------------------------------|----------------------------------------------------------|
+| state_code                    | state code                                               |
+| state                         | state name                                               |
+| median_age                    | median age in that state                                 |
+| male_population               | number of male population                                |
+| female_population             | number of female population                              |
+| total_population              | number of total population                               |
+| number_of_vaterans            | number of vaterans                                       |
+| foreign_born                  | number of foreign born                                   |
+| median_household_size         | median household size in that state                      |
+| american_indian_alaska_native | number of american, indian, alaska, or native population |
+| asian                         | number of asian population                               |
+| black_african_american        | number of black, african population                      |
+| hispanic_latino               | number of hispanic or latino population                  |
+| white                         | number of white population                               |
+| load_data_timestamp           | Timestamp when loaded the data                           |
+
+## dim_date
+
+| Column name         | Description                    |
+|---------------------|--------------------------------|
+| date                | date in format YYYY-mm-dd      |
+| year                | year                           |
+| month               | month                          |
+| day                 | number of day in month         |
+| week_of_year        | number of week of year         |
+| day_of_week         | number of day of week          |
+| load_data_timestamp | Timestamp when loaded the data |
+
+## dim_country
+
+| Column name         | Description                    |
+|---------------------|--------------------------------|
+| country             | country name                   |
+| avg_temp            | average land temperature       |
+| latitude            | latitude                       |
+| longitude           | longitude                      |
+| load_data_timestamp | Timestamp when loaded the data |
+
 
 ### Summary
 
