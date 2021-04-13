@@ -175,5 +175,5 @@ Apache Spark is a fast and general-purpose cluster computing system. It provides
 	   - We can meet this requirement with the SLA option provided by Airflow. This feature will guarantee that the system should populate the data before 7 am every day. In case your task failed, you can fix the problem by shifting the start ETL time earlier or increasing the spark's computation power.
 
    -  The database needed to be accessed by 100+ people.
-	   We can store the data in any data warehouse options (e.g. redshift) and let them access our data. The underlying data format can still be a `delta` format.
+	  -  We can store the data in any data warehouse options (e.g. redshift) and let them access our data. The underlying data format can still be a `delta` format.
 
