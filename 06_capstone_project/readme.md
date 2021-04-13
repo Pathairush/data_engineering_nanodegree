@@ -47,12 +47,21 @@ From the previous section's findings, here is the data model that we decide to a
 
 ## Data pipeline
 
-###  Create a data model
+###  How to run this project
 
-In each airflow task, we provide a `python`  script to ingest, transform and load data into delta format.
-For more detail about the ETL script, you can see the code in the `etl` folder. You can find the running ETL step in `capstone_project.ipynb` file.
+1. required - this instruction only work with Udacity workspace development environment
+```
+python /home/workspace/etl/run.py
+```
 
 ### Data quality check
+
+We provide 3 data quality checks for this capstone project.
+- `check_number_of_row_more_than_zero` - this function checks that the row in target table has more than 0 row.
+- `check_primary_key_is_not_null` - this function checks that the primary key of target table is not null
+- `check_primary_key_is_unique` - this function checks that the primary key of target table is unique
+
+The `run.py` script will run the data quality check at the end of the ETL pipeline to verify the whole process's integrity.
 
 ### Data dictionary
 
@@ -137,7 +146,7 @@ For more detail about the ETL script, you can see the code in the `etl` folder. 
 
 #### Technology
 
-There will be three main components in any data pipeline that we need to selectively choose for building the whole project. `storage format`, `computation engine`, and `orchestrator`. There are many tools and technology out there, but here is what I decided to use in this capstone project.
+There will be 2 main components in any data pipeline that we need to selectively choose for building the whole project. `storage format`, `computation engine`. There are many tools and technology out there, but here is what I decided to use in this capstone project.
 
 #### [Delta Lake](https://delta.io/) `storage format`
 ![img](https://github.com/Pathairush/data_engineering/blob/master/06_capstone_project/image/delta-lake-logo.png)
@@ -151,12 +160,6 @@ In short, delta lake is an updated version of parquet format. The development te
 
 Apache Spark is a fast and general-purpose cluster computing system. It provides high-level APIs in Java, Scala, Python, and R and an optimized engine that supports general execution graphs. It also supports a rich set of higher-level tools, including [Spark SQL](https://spark.apache.org/docs/2.4.3/sql-programming-guide.html) for SQL and structured data processing, [MLlib](https://spark.apache.org/docs/2.4.3/ml-guide.html) for machine learning, [GraphX](https://spark.apache.org/docs/2.4.3/graphx-programming-guide.html) for graph processing, and [Spark Streaming](https://spark.apache.org/docs/2.4.3/streaming-programming-guide.html).
 
-#### [Apache Airflow](https://airflow.apache.org/docs/apache-airflow/stable/)  `orchestrator`
-![img](https://github.com/Pathairush/data_engineering/blob/master/06_capstone_project/image/airflow_logo.png)
-
-Airflow is a platform to programmatically author, schedule, and monitor workflows.
-
-Use Airflow to author workflows as Directed Acyclic Graphs (DAGs) of tasks. The Airflow scheduler executes your tasks on an array of workers while following the specified dependencies. Rich command line utilities make performing complex surgeries on DAGs a snap. The rich user interface makes it easy to visualize pipelines running in production, monitor progress, and troubleshoot issues when needed.
 
 ***Propose how often the data should be updated and why.***
 
@@ -172,5 +175,5 @@ Use Airflow to author workflows as Directed Acyclic Graphs (DAGs) of tasks. The 
 	   - We can meet this requirement with the SLA option provided by Airflow. This feature will guarantee that the system should populate the data before 7 am every day. In case your task failed, you can fix the problem by shifting the start ETL time earlier or increasing the spark's computation power.
 
    -  The database needed to be accessed by 100+ people.
-	   We can store the data in any data warehouse options and let them access our data. The underlying data format can still be a `delta` format.
+	   We can store the data in any data warehouse options (e.g. redshift) and let them access our data. The underlying data format can still be a `delta` format.
 
