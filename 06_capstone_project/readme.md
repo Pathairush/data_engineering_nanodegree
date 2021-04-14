@@ -1,7 +1,7 @@
 # US Immigration capstone project
 
 ## Updated
-- [X] Add apache airflow to orchestrate the ETL pipeline (14 Apr 2021)
+-  :white_check_mark: Add apache airflow to orchestrate the ETL pipeline (14 Apr 2021)
 
 ## Introduction 
 
@@ -64,12 +64,12 @@ In the Udacity development workspace, there is no Apache airflow exists. That is
 #### Local machine
 
 If you try to run this project from your local machine, you need to install the required component as following
-1. `Pyspark` [MacOS Installation guide](https://maelfabien.github.io/bigdata/SparkInstall/#)
+1. `Pyspark` [MacOS Installation guide](https://maelfabien.github.io/bigdata/SparkInstall/#) :heavy_exclamation_mark:
    - For step 2, when installing Java 8, you may need to change the command to `brew install --cask`.
    - For step 3, you need to specify the scala version to be `brew install scala@2.12`
    - For the apache-spark version, `apache-spark==3.1.1` made some change, leading to the broken of `delta==0.8.0`. We recommend you to have an `apache-spark==3.0.2` instead. To install the specific version in Mac, see [ManasDas](https://stackoverflow.com/questions/49808951/how-to-install-apache-spark-2-2-0-with-homebrew-on-mac/49812624) comment.
    - For step 6, if you need to find spark_home directory, please run this command `echo 'sc.getConf.get("spark.home")' | spark-shell` in your terminal.
-2. `Airflow` [Installation guide](https://airflow.apache.org/docs/apache-airflow/stable/start/local.html#what-s-next)
+2. `Airflow` [Installation guide](https://airflow.apache.org/docs/apache-airflow/stable/start/local.html#what-s-next) :heavy_exclamation_mark:
    - To install a `spark` connection in airflow, please see this [document](https://airflow.apache.org/docs/apache-airflow-providers/packages-ref.html#apache-airflow-providers-apache-spark)
    - To develop a spark-submit job, here is a good starting [guide](https://medium.com/swlh/using-airflow-to-schedule-spark-jobs-811becf3a960)
    - After installing the airflow you need to change the `dag default part` in `~/airflow/airflow.cfg` to point into your project directory.
@@ -91,6 +91,11 @@ Otherwise, you can still run the following command to activate the ETL pipeline.
 ```
 python ./etl/run.py
 ```
+
+### ETL behavior
+
+For staging table, we use a `truncate-load` style.
+For fact and dimension table, we use an `upsert-load` style. The data will be update / insert depending on the primary key matching.
 
 ### Data quality check
 
@@ -180,8 +185,6 @@ The `run.py` script will run the data quality check at the end of the ETL pipeli
 
 ### Summary
 
-***Clearly state the rationale for the choice of tools and technologies for the project.***
-
 #### Technology
 
 There will be three main components in any data pipeline that we need to selectively choose for building the whole project. `storage format`, `computation engine`, and `orchestrator`. There are many tools and technology out there, but here is what I decided to use in this capstone project.
@@ -206,19 +209,19 @@ Airflow is a platform to programmatically author, schedule, and monitor workflow
 Use airflow to author workflows as Directed Acyclic Graphs (DAGs) of tasks. The Airflow scheduler executes your tasks on an array of workers while following the specified dependencies. Rich command line utilities make performing complex surgeries on DAGs a snap. The rich user interface makes it easy to visualize pipelines running in production, monitor progress, and troubleshoot issues when needed.
 
 
-***Propose how often we should update the data and why.***
+#### Running schedule
 
 `I94 immigration` data usually update every month. So, we should align our data pipeline with this schedule. There is no point in running the data pipeline every day without new data came in. Other dimensional tables are one time (`US demographic`) or monthly (`World temperature`) updated. 
 
 
-**Write a description of how you would approach the problem differently under the following scenarios:**
+#### Others things
 
-   - If increased the data by 100x.
-      - Because we leverage the power of spark. There is no need to worry about the scaling size of the underlying computation engine. In case we reach the limit, we can increase the cluster size that the spark is running on. Spark also works in a distributed way, so horizontal scaling is always an option to go for.
-      
-   -  The business team needs to update a dashboard daily by 7 am every day.
-      - We can meet this requirement with the SLA option provided by airflow. This feature will guarantee that the system should populate the data before 7 am every day. In case your task failed, you can fix the problem by shifting the start ETL time earlier or increasing the spark's computation power.
+- If increased the data by 100x.
+   - Because we leverage the power of spark. There is no need to worry about the scaling size of the underlying computation engine. In case we reach the limit, we can increase the cluster size that the spark is running on. Spark also works in a distributed way, so horizontal scaling is always an option to go for.
+   
+-  The business team needs to update a dashboard daily by 7 am every day.
+   - We can meet this requirement with the SLA option provided by airflow. This feature will guarantee that the system should populate the data before 7 am every day. In case your task failed, you can fix the problem by shifting the start ETL time earlier or increasing the spark's computation power.
 
-   -  The database needed to be accessed by 100+ people.
-     -  We can store the data in any data warehouse options (e.g., redshift) and let them access our data. The underlying data format can still be a `delta` format.
+-  The database needed to be accessed by 100+ people.
+   -  We can store the data in any data warehouse options (e.g., redshift) and let them access our data. The underlying data format can still be a `delta` format.
 

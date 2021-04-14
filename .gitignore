@@ -1,6 +1,6 @@
 06_capstone_project/output/
 06_capstone_project/data/
 06_capstone_project/etl/__pycache__/
+06_capstone_project/etl/.ipynb_checkpoints/
 */.DS_Store
 .DS_Store
-.ipynb_checkpoints
