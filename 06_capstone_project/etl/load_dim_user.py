@@ -5,8 +5,9 @@ import logging
 import datetime
 import os
 from helper import upsert_table
+import configparser
 
-def transform_data(spark, input_file):
+def transform_data(spark, input_file, cfg):
     
     '''
     transform data before writing to delta file
@@ -29,8 +30,8 @@ def transform_data(spark, input_file):
     for c in ['i94cit', 'i94res']:
         dim_user = dim_user.withColumn(c, F.substring(F.col(c).cast(T.StringType()), 1, 3))
 
-    map_country_code = spark.read.csv('/home/workspace/output/mapping_data/city_code.csv', header=True)
-    map_residence_code = spark.read.csv('/home/workspace/output/mapping_data/residence_code.csv', header=True)
+    map_country_code = spark.read.csv(os.path.join(cfg['PATH']['DEV'], 'output/mapping_data/city_code.csv'), header=True)
+    map_residence_code = spark.read.csv(os.path.join(cfg['PATH']['DEV'], 'output/mapping_data/residence_code.csv'), header=True)
 
     dim_user = dim_user.join(map_country_code, 'i94cit', 'left')
     dim_user = dim_user.join(map_residence_code, 'i94res', 'left')
@@ -44,17 +45,20 @@ def transform_data(spark, input_file):
 
 def main():
     
-    input_file = '/home/workspace/output/staging_fact'
-    output_file = '/home/workspace/output/dim_user'
+    cfg = configparser.ConfigParser()
+    cfg.read('/Users/pathairs/Documents/projects/data_engineering/06_capstone_project/etl/config.cfg')
+
+    input_file = os.path.join(cfg['PATH']['DEV'], cfg['OUTPUT_FILE']['STAGE_FACT'])
+    output_file = os.path.join(cfg['PATH']['DEV'], cfg['OUTPUT_FILE']['DIM_USER'])
     
     spark = SparkSession.builder\
-    .config("spark.jars.packages","saurfang:spark-sas7bdat:2.0.0-s_2.11,io.delta:delta-core_2.11:0.6.1")\
+    .config("spark.jars.packages",cfg['SPARK_CONFIG']['JAR_PACKAGE'])\
     .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")\
     .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")\
     .config("spark.sql.autoBroadcastJoinThreshold", -1)\
     .enableHiveSupport().getOrCreate()
 
-    df = transform_data(spark, input_file)
+    df = transform_data(spark, input_file, cfg)
     upsert_table(spark, df, "source.cicid = update.cicid", output_file, partition_columns = ['year', 'month'])
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 from pyspark.sql import SparkSession
 import os
+import configparser
 
 def check_number_of_row_more_than_zero(sdf):
     '''
@@ -20,21 +21,23 @@ def check_primary_key_is_unique(sdf, pk):
     return sdf.select(pk).distinct().count() == sdf.count()
 
 def main():
+
+    cfg = configparser.ConfigParser()
+    cfg.read('/Users/pathairs/Documents/projects/data_engineering/06_capstone_project/etl/config.cfg')
     
-    output_path = './output'
-    files = ['staging_fact', 'fact_table', 'dim_user', 'dim_date', 'dim_state', 'dim_country']
-    primary_keys = ['cicid', 'id', 'cicid', 'date', 'state_code', 'country']
+    files = [cfg['OUTPUT_FILE']['FACT_TABLE'], cfg['OUTPUT_FILE']['DIM_USER'], cfg['OUTPUT_FILE']['DIM_DATE'], cfg['OUTPUT_FILE']['DIM_STATE'], cfg['OUTPUT_FILE']['DIM_COUNTRY']]
+    primary_keys = ['id', 'cicid', 'date', 'state_code', 'country']
     map_primary_key = {file:pk for file, pk in zip(files, primary_keys)}
 
     spark = SparkSession.builder\
-        .config("spark.jars.packages","saurfang:spark-sas7bdat:2.0.0-s_2.11,io.delta:delta-core_2.11:0.6.1")\
-        .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")\
-        .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")\
-        .enableHiveSupport().getOrCreate()
+            .config("spark.jars.packages", cfg['SPARK_CONFIG']['JAR_PACKAGE'])\
+            .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")\
+            .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")\
+            .enableHiveSupport().getOrCreate()
 
     for file in files:
 
-        table_path = os.path.join(output_path, file)
+        table_path = os.path.join(cfg['PATH']['DEV'], file)
         sdf = spark.read.format('delta').load(table_path)
 
         if not check_number_of_row_more_than_zero(sdf):

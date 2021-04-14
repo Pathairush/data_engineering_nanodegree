@@ -1,6 +1,7 @@
 import pandas as pd
 import logging
 import os
+import configparser
 
 def code_mapper(f_content, idx):
     
@@ -26,10 +27,14 @@ def convert_mapping_to_pdf(mapping, join_column_name, target_column_name):
 
 def main():
     
-    label_description_file = '/home/workspace/data/I94_SAS_Labels_Descriptions.SAS'
-    
-    if not os.path.exists('/home/workspace/output/mapping_data'):
-        os.mkdir('/home/workspace/output/mapping_data')
+    cfg = configparser.ConfigParser()
+    cfg.read('/Users/pathairs/Documents/projects/data_engineering/06_capstone_project/etl/config.cfg')
+
+    label_description_file = os.path.join(cfg['PATH']['DEV'], cfg['DATA_FILE']['IMMIGRATION_LABEL'])
+    mapping_path = os.path.join(cfg['PATH']['DEV'], 'output/mapping_data')
+
+    if not os.path.exists(mapping_path):
+        os.mkdir(mapping_path)
 
     with open(label_description_file) as f:
         
@@ -51,12 +56,12 @@ def main():
         visa_code = convert_mapping_to_pdf(i94visa, join_column_name = 'i94visa', target_column_name = 'visa_code')
         
         logging.info('saving mapping files in csv format')
-        city_code.to_csv('/home/workspace/output/mapping_data/city_code.csv', index=False, header=True)
-        residence_code.to_csv('/home/workspace/output/mapping_data/residence_code.csv', index=False, header=True)
-        port_code.to_csv('/home/workspace/output/mapping_data/port_code.csv', index=False, header=True)
-        mode_code.to_csv('/home/workspace/output/mapping_data/mode_code.csv', index=False, header=True)
-        addr_code.to_csv('/home/workspace/output/mapping_data/addr_code.csv', index=False, header=True)
-        visa_code.to_csv('/home/workspace/output/mapping_data/visa_code.csv', index=False, header=True)
+        city_code.to_csv(os.path.join(cfg['PATH']['DEV'], 'output/mapping_data/city_code.csv'), index=False, header=True)
+        residence_code.to_csv(os.path.join(cfg['PATH']['DEV'], 'output/mapping_data/residence_code.csv'), index=False, header=True)
+        port_code.to_csv(os.path.join(cfg['PATH']['DEV'], 'output/mapping_data/port_code.csv'), index=False, header=True)
+        mode_code.to_csv(os.path.join(cfg['PATH']['DEV'], 'output/mapping_data/mode_code.csv'), index=False, header=True)
+        addr_code.to_csv(os.path.join(cfg['PATH']['DEV'], 'output/mapping_data/addr_code.csv'), index=False, header=True)
+        visa_code.to_csv(os.path.join(cfg['PATH']['DEV'], 'output/mapping_data/visa_code.csv'), index=False, header=True)
     
 if __name__ == "__main__":
     

@@ -5,6 +5,7 @@ import logging
 import datetime
 import os
 from helper import upsert_table, clean_column_name
+import configparser
 
 def transform_data(spark, input_file):
     
@@ -44,11 +45,14 @@ def transform_data(spark, input_file):
 
 def main():
     
-    input_file = '/home/workspace/data/us-cities-demographics.csv'
-    output_file = '/home/workspace/output/dim_state'
+    cfg = configparser.ConfigParser()
+    cfg.read('/Users/pathairs/Documents/projects/data_engineering/06_capstone_project/etl/config.cfg')
+
+    input_file = os.path.join(cfg['PATH']['DEV'], cfg['DATA_FILE']['DEMOGRAPHIC'])
+    output_file = os.path.join(cfg['PATH']['DEV'], cfg['OUTPUT_FILE']['DIM_STATE'])
     
     spark = SparkSession.builder\
-    .config("spark.jars.packages","saurfang:spark-sas7bdat:2.0.0-s_2.11,io.delta:delta-core_2.11:0.6.1")\
+    .config("spark.jars.packages", cfg['SPARK_CONFIG']['JAR_PACKAGE'])\
     .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")\
     .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")\
     .enableHiveSupport().getOrCreate()

@@ -5,8 +5,9 @@ import logging
 import datetime
 import os
 from helper import upsert_table, clean_column_name
+import configparser
 
-def transform_data(spark, input_file):
+def transform_data(spark, input_file, cfg):
     
     '''
     transform data before writing to delta file
@@ -33,9 +34,9 @@ def transform_data(spark, input_file):
 
     fact = fact.toDF(*[immigration_rename_column[c] for c in fact.columns])
 
-    map_port_code = spark.read.csv('/home/workspace/output/mapping_data/port_code.csv', header=True)
-    map_mode_code = spark.read.csv('/home/workspace/output/mapping_data/mode_code.csv', header=True)
-    map_visa_code = spark.read.csv('/home/workspace/output/mapping_data/visa_code.csv', header=True)
+    map_port_code = spark.read.csv(os.path.join(cfg['PATH']['DEV'], 'output/mapping_data/port_code.csv'), header=True)
+    map_mode_code = spark.read.csv(os.path.join(cfg['PATH']['DEV'], 'output/mapping_data/mode_code.csv'), header=True)
+    map_visa_code = spark.read.csv(os.path.join(cfg['PATH']['DEV'], 'output/mapping_data/visa_code.csv'), header=True)
 
     fact = fact.join(F.broadcast(map_port_code), 'i94port', 'left')
     fact = fact.join(F.broadcast(map_mode_code), 'i94mode', 'left')
@@ -59,16 +60,19 @@ def transform_data(spark, input_file):
 
 def main():
     
-    input_file = '/home/workspace/output/staging_fact'
-    output_file = '/home/workspace/output/fact_table'
+    cfg = configparser.ConfigParser()
+    cfg.read('/Users/pathairs/Documents/projects/data_engineering/06_capstone_project/etl/config.cfg')
+
+    input_file = os.path.join(cfg['PATH']['DEV'], cfg['OUTPUT_FILE']['STAGE_FACT'])
+    output_file = os.path.join(cfg['PATH']['DEV'], cfg['OUTPUT_FILE']['FACT_TABLE'])
     
     spark = SparkSession.builder\
-            .config("spark.jars.packages","saurfang:spark-sas7bdat:2.0.0-s_2.11,io.delta:delta-core_2.11:0.6.1")\
+            .config("spark.jars.packages", cfg['SPARK_CONFIG']['JAR_PACKAGE'])\
             .config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")\
             .config("spark.sql.catalog.spark_catalog", "org.apache.spark.sql.delta.catalog.DeltaCatalog")\
             .enableHiveSupport().getOrCreate()
     
-    df = transform_data(spark, input_file)
+    df = transform_data(spark, input_file, cfg)
     upsert_table(spark, df, "source.id = update.id", output_file, partition_columns = ['year', 'month'])
 
 if __name__ == "__main__":
