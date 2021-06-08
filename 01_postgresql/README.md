@@ -28,5 +28,5 @@ Columns  - `artist_id`, `name`, `location`, `latitude`, `longitude`
 Columns  - `start_time`, `hour`, `day`, `week`, `month`, `year`, `weekday`
 
 ### ER Diagram
-![img](./img/sparkify.png)
+![img](./img/Sparkify.png)
  
